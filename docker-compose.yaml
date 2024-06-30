@@ -1,0 +1,35 @@
+version: "3"
+services:
+  nginx-proxy:
+    image: arm64v8/nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./:/var/www/
+    networks:
+      - host
+
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+#      args:
+#        - NOVA_USERNAME=${NOVA_USERNAME}
+#        - NOVA_PASSWORD=${NOVA_PASSWORD}
+#    command: ./.platform/scripts/run.sh
+    container_name: web
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    ports:
+      - "8000:9000"
+    volumes:
+      - .platform/files/php.ini:/usr/local/etc/php/conf.d/zz-laravel.ini
+      - .platform/files/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/zz-laravel.conf
+    networks:
+      - host
+
+networks:
+  host:
