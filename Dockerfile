@@ -1,10 +1,6 @@
 FROM node:14-bullseye AS node
 FROM php:8.2.0-fpm
 
-# Arguments defined in docker-compose.yml
-#ARG NOVA_USERNAME
-#ARG NOVA_PASSWORD
-
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
